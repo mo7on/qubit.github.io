@@ -17,13 +17,22 @@ export type Article = {
   title: string;
   content: string;
   category: string;
+  user_id?: string; // Added user_id field
   created_at: string;
   updated_at: string;
 };
 
 export type ArticleInsert = Omit<Article, 'id' | 'created_at' | 'updated_at'>;
 
-// Add these types to your existing database.types.ts file
+export type Session = {
+  id: string;
+  user_id: string;
+  token: string;
+  created_at: string;
+  expires_at: string;
+};
+
+export type SessionInsert = Omit<Session, 'id' | 'created_at'>;
 
 export type Conversation = {
   id: string;
@@ -46,6 +55,7 @@ export type Message = {
 
 export type ConversationInsert = Omit<Conversation, 'id' | 'created_at' | 'updated_at'>;
 export type MessageInsert = Omit<Message, 'id' | 'created_at'>;
+
 export type Device = {
   id: string;
   user_id: string;
