@@ -1,9 +1,9 @@
 import { supabaseAdmin } from '@/lib/supabase';
-import { ConversationInsert, MessageInsert } from '@/types/database.types';
+import { Conversation, ConversationInsert, Message, MessageInsert } from '@/types/database.types';
 import { generateResponse } from './gemini.service';
 
 // Create a new conversation
-export async function createConversation(userId: string, title: string) {
+export async function createConversation(userId: string, title: string): Promise<Conversation> {
   try {
     const conversationData: ConversationInsert = {
       user_id: userId,
@@ -31,7 +31,7 @@ export async function createConversation(userId: string, title: string) {
 }
 
 // Get active conversation or create a new one
-export async function getOrCreateActiveConversation(userId: string) {
+export async function getOrCreateActiveConversation(userId: string): Promise<Conversation> {
   try {
     // Try to get the most recent active conversation
     const { data: activeConversation, error } = await supabaseAdmin
@@ -68,7 +68,7 @@ export async function addMessage(
   userId: string,
   content: string,
   isUser: boolean
-) {
+): Promise<Message> {
   try {
     // Check if the conversation is active
     const { data: conversation, error: convError } = await supabaseAdmin
@@ -145,7 +145,7 @@ export async function processUserMessage(userId: string, message: string) {
 }
 
 // Get conversation history
-export async function getConversationHistory(userId: string, limit = 10) {
+export async function getConversationHistory(userId: string, limit = 10): Promise<Conversation[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from('conversations')
@@ -155,11 +155,11 @@ export async function getConversationHistory(userId: string, limit = 10) {
       .limit(limit);
 
     if (error) {
-      console.error('Error fetching conversation history:', error);
+      console.error('Error fetching conversations:', error);
       throw error;
     }
 
-    return data;
+    return data || [];
   } catch (error) {
     console.error('Unexpected error in getConversationHistory:', error);
     throw error;
@@ -167,7 +167,7 @@ export async function getConversationHistory(userId: string, limit = 10) {
 }
 
 // Get messages for a conversation
-export async function getConversationMessages(conversationId: string) {
+export async function getConversationMessages(conversationId: string): Promise<Message[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from('messages')
@@ -176,11 +176,11 @@ export async function getConversationMessages(conversationId: string) {
       .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('Error fetching conversation messages:', error);
+      console.error('Error fetching messages:', error);
       throw error;
     }
 
-    return data;
+    return data || [];
   } catch (error) {
     console.error('Unexpected error in getConversationMessages:', error);
     throw error;
