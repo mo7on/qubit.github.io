@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "server": "node src/backend/server.js",
-    "server:dev": "nodemon src/backend/server.js"
+    "server:dev": "nodemon src/backend/server.js",
+    "generate-article": "ts-node src/scripts/generate-article.ts"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +27,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@supabase/supabase-js": "^2.49.1",
     "@types/express": "^5.0.0",
+    "@types/node-cron": "^3.0.11",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -44,6 +46,7 @@
     "next": "15.2.2",
     "next-image-zoom": "^1.1.7",
     "next-themes": "^0.4.6",
+    "node-cron": "^3.0.3",
     "postgres": "^3.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

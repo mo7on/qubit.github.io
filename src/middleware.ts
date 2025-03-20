@@ -1,25 +1,16 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { initializeScheduler } from '@/lib/scheduler';
 
 export function middleware(request: NextRequest) {
-  // Add CORS headers to the response
-  const response = NextResponse.next();
+  // Initialize the scheduler on server start
+  initializeScheduler();
   
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  // Handle OPTIONS request for preflight
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, { 
-      status: 204,
-      headers: response.headers
-    });
-  }
-  
-  return response;
+  // Continue with the request
+  return NextResponse.next();
 }
 
+// Only run the middleware on specific paths to avoid unnecessary executions
 export const config = {
-  matcher: '/api/:path*',
+  matcher: ['/api/:path*'],
 };
